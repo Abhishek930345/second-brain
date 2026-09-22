@@ -67,7 +67,7 @@ export async function queryCodebase(question, userId, repoName = null) {
       .map(c => `// Repo: ${c.repo} | File: ${c.filePath}\n${c.content}`)
       .join('\n\n---\n\n');
 
-    console.log('Context length:', context.length);
+    console.log('Context length is:', context.length);
 
     // Groq se answer lo
     const completion = await groq.chat.completions.create({
