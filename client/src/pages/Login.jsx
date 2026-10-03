@@ -12,7 +12,9 @@ export default function Login() {
   }, [user, navigate]);
 
   const handleGithubLogin = () => {
-    window.location.href = 'http://localhost:5008/api/auth/github';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5008/api';
+    const origin = window.location.origin;
+    window.location.href = `${apiUrl}/auth/github?origin=${encodeURIComponent(origin)}`;
   };
 
   return (

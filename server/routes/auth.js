@@ -10,7 +10,15 @@ const router = express.Router();
 
 // GitHub OAuth — redirect
 router.get('/github', (req, res) => {
-  const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=repo,read:user,user:email`;
+  let origin = req.query.origin || process.env.CLIENT_URL || 'http://localhost:5173';
+  try {
+    origin = new URL(origin).origin;
+  } catch (e) {
+    origin = process.env.CLIENT_URL || 'http://localhost:5173';
+  }
+
+  const state = Buffer.from(JSON.stringify({ origin })).toString('base64');
+  const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=repo,read:user,user:email&state=${encodeURIComponent(state)}`;
   res.redirect(url);
 });
 

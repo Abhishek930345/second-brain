@@ -4,11 +4,32 @@ import User from '../models/User.js';
 
 // GitHub se token lo aur user save karo
 export const githubCallback = async (req, res) => {
+  let clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
+  if (req.query.state) {
+    try {
+      const decoded = JSON.parse(Buffer.from(req.query.state, 'base64').toString('utf-8'));
+      if (decoded?.origin) {
+        const originUrl = new URL(decoded.origin);
+        if (
+          originUrl.hostname === 'localhost' ||
+          originUrl.hostname === '127.0.0.1' ||
+          originUrl.hostname.endsWith('.vercel.app') ||
+          (process.env.CLIENT_URL && decoded.origin.startsWith(process.env.CLIENT_URL))
+        ) {
+          clientUrl = decoded.origin;
+        }
+      }
+    } catch (e) {
+      console.warn('Could not parse OAuth state:', e.message);
+    }
+  }
+
   try {
     const { code } = req.query;
 
     if (!code) {
-      return res.redirect(`${process.env.CLIENT_URL}?error=no_code`);
+      return res.redirect(`${clientUrl}?error=no_code`);
     }
 
     // Step 1 — Code se GitHub access token lo
@@ -25,7 +46,7 @@ export const githubCallback = async (req, res) => {
     const accessToken = tokenRes.data.access_token;
 
     if (!accessToken) {
-      return res.redirect(`${process.env.CLIENT_URL}?error=no_token`);
+      return res.redirect(`${clientUrl}?error=no_token`);
     }
 
     // Step 2 — GitHub se user info lo
@@ -54,11 +75,11 @@ export const githubCallback = async (req, res) => {
     );
 
     // Step 5 — Frontend par bhejo
-    res.redirect(`${process.env.CLIENT_URL}/dashboard?token=${jwtToken}`);
+    res.redirect(`${clientUrl}/dashboard?token=${jwtToken}`);
 
   } catch (error) {
     console.error('GitHub OAuth Error:', error.message);
-    res.redirect(`${process.env.CLIENT_URL}?error=auth_failed`);
+    res.redirect(`${clientUrl}?error=auth_failed`);
   }
 };
 

@@ -105,10 +105,6 @@ export default function RepoExplorer() {
   const [todos, setTodos]           = useState(null);
   const [repoFullName, setRepoFullName] = useState('');
 
-  useEffect(() => {
-    fetchTree();
-  }, [repoName]);
-
   const fetchTree = async () => {
     try {
       setTreeLoading(true);
@@ -148,6 +144,10 @@ export default function RepoExplorer() {
       setTreeLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchTree();
+  }, [repoName]);
 
   const handleFileClick = async (node) => {
     if (node.type === 'tree') return;

@@ -11,8 +11,6 @@ export default function ApiDocs() {
   const [docs, setDocs]           = useState(null);
   const [copied, setCopied]       = useState(false);
 
-  useEffect(() => { fetchRepos(); }, []);
-
   const fetchRepos = async () => {
     try {
       const { data } = await api.get('/repos/ingested');
@@ -21,6 +19,8 @@ export default function ApiDocs() {
       toast.error('Repos fetch failed');
     }
   };
+
+  useEffect(() => { fetchRepos(); }, []);
 
   const handleGenerate = async () => {
     if (!selectedRepo) return toast.error('Pehle repo select karo');

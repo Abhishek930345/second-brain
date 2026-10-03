@@ -266,10 +266,6 @@ export default function Repos() {
   const [ingesting, setIngesting] = useState({});
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchRepos();
-  }, []);
-
   const fetchRepos = async () => {
     try {
       setLoading(true);
@@ -283,6 +279,10 @@ export default function Repos() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchRepos();
+  }, []);
 
   const handleIngest = async (repo) => {
     try {

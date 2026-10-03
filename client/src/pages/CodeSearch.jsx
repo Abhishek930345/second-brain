@@ -11,8 +11,6 @@ export default function CodeSearch() {
   const [loading, setLoading]     = useState(false);
   const [results, setResults]     = useState(null);
 
-  useEffect(() => { fetchRepos(); }, []);
-
   const fetchRepos = async () => {
     try {
       const { data } = await api.get('/repos/ingested');
@@ -21,6 +19,8 @@ export default function CodeSearch() {
       toast.error('Repos fetch failed');
     }
   };
+
+  useEffect(() => { fetchRepos(); }, []);
 
   const handleSearch = async () => {
     if (!query.trim()) return toast.error('Search query daalo');

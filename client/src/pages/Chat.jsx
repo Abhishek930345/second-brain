@@ -282,19 +282,9 @@ export default function Chat() {
   const [loading, setLoading]       = useState(false);
   const [chatId, setChatId]         = useState(null);
   const [repos, setRepos]           = useState([]);
-  const [selectedRepo, setSelectedRepo] = useState('');
-  const messagesEndRef              = useRef(null);
   const [searchParams]              = useSearchParams();
-
-  useEffect(() => {
-    fetchIngestedRepos();
-    const repoFromUrl = searchParams.get('repo');
-    if (repoFromUrl) setSelectedRepo(repoFromUrl);
-  }, [searchParams]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  const [selectedRepo, setSelectedRepo] = useState(() => searchParams.get('repo') || '');
+  const messagesEndRef              = useRef(null);
 
   const fetchIngestedRepos = async () => {
     try {
@@ -304,6 +294,14 @@ export default function Chat() {
       console.log('Repos fetch failed');
     }
   };
+
+  useEffect(() => {
+    fetchIngestedRepos();
+  }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;

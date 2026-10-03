@@ -10,10 +10,6 @@ export default function Bugs() {
   const [loading, setLoading]     = useState(false);
   const [result, setResult]       = useState(null);
 
-  useEffect(() => {
-    fetchRepos();
-  }, []);
-
   const fetchRepos = async () => {
     try {
       const { data } = await api.get('/repos/ingested');
@@ -22,6 +18,10 @@ export default function Bugs() {
       toast.error('Repos fetch failed');
     }
   };
+
+  useEffect(() => {
+    fetchRepos();
+  }, []);
 
   const handleScan = async () => {
     if (!selectedRepo) return toast.error('Pehle repo select karo');

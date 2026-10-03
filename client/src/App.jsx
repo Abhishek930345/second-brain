@@ -118,6 +118,7 @@ const AppRoutes = () => {
       <Route path="/explorer/:repoName" element={
         <ProtectedRoute><RepoExplorer /></ProtectedRoute>
       } />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
